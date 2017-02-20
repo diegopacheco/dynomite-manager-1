@@ -291,6 +291,7 @@ public class InstanceIdentity {
 		
 		private int generateProperSlot(Map<String,String> asgInstanceIds, String myInstanceID){
 			
+			TokenGroup tokenGroupPerAZ = new TokenGroup(asgInstanceIds);
 			Map<String,Integer> tokens = new HashMap<>();
 			
 			// One per AZ. It will always be 3.
@@ -299,7 +300,7 @@ public class InstanceIdentity {
 			int counter = 0;
 			Integer current_token = 100;
 			
-			for( String k : asgInstanceIds.keySet()){
+			for( String k : tokenGroupPerAZ.getShuffledAZsInstanceIds().keySet()){
 				if (counter < resiliency_copies){
 					counter++;
 				}else{

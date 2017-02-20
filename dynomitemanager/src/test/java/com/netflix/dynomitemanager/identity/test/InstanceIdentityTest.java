@@ -86,7 +86,14 @@ public class InstanceIdentityTest {
 		}
 	
 		System.out.println("----");
+		System.out.println(" AZ Check: ");
 		System.out.println("----");
+		System.out.println("---- i-wef43fv01 IS on :: us-west-2a");
+		System.out.println("---- i-wef43fv02 IS on :: us-west-2b");
+		System.out.println("---- i-wef43fv03 IS on :: us-west-2c");
+		System.out.println("---- i-wef43fv04 IS on :: us-west-2a");
+		System.out.println("---- i-wef43fv05 IS on :: us-west-2b");
+		System.out.println("---- i-wef43fv06 IS on :: us-west-2c");
 		
 	}
 	
