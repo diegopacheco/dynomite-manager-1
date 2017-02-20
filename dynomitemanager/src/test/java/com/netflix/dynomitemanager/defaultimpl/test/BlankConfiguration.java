@@ -20,7 +20,13 @@ import com.netflix.dynomitemanager.defaultimpl.IConfiguration;
  * @author akbarahmed
  */
 public class BlankConfiguration implements IConfiguration {
-
+	
+	public String instanceName = "i-wef43fv01";
+	
+	public void setInstanceName(String name) {
+		instanceName = name;
+	}
+	
 	@Override
 	public boolean isWarmBootstrap() {
 		return false;
@@ -182,7 +188,7 @@ public class BlankConfiguration implements IConfiguration {
 
 	@Override
 	public String getInstanceName() {
-		return "i-wef43fv01";
+		return instanceName;
 	}
 
 	@Override

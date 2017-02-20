@@ -3,7 +3,6 @@ package com.netflix.dynomitemanager.identity.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.netflix.dynomitemanager.defaultimpl.IConfiguration;
 import com.netflix.dynomitemanager.defaultimpl.test.BlankConfiguration;
 import com.netflix.dynomitemanager.identity.AppsInstance;
 import com.netflix.dynomitemanager.identity.IAppsInstanceFactory;
@@ -24,20 +23,45 @@ public class InstanceIdentityTest {
 		
 		IAppsInstanceFactory factory = new FakeDBAppsInstanceFactory();
 		IMembership membership = new FakeAWSMembership(); 
-		IConfiguration config = new BlankConfiguration();
+		BlankConfiguration config = new BlankConfiguration();
 		Sleeper sleeper = new ThreadSleeper();
 		ITokenManager tokenManager = new TokenManager();
 		InstanceEnvIdentity insEnvIdentity = new LocalInstanceEnvIdentity();
 		
 		GetNewToken gnt = new InstanceIdentity(factory, membership, config, sleeper, tokenManager, insEnvIdentity).new GetNewToken();
 		AppsInstance result = gnt.call();
-		
 		Assert.assertNotNull(result);
 		System.out.println(result);
 		
-		//
-		// TODO: Test new token algo logic here
-		//
+		config.setInstanceName("i-wef43fv02");
+		gnt = new InstanceIdentity(factory, membership, config, sleeper, tokenManager, insEnvIdentity).new GetNewToken();
+		result = gnt.call();
+		Assert.assertNotNull(result);
+		System.out.println(result.getToken());
+		
+		config.setInstanceName("i-wef43fv03");
+		gnt = new InstanceIdentity(factory, membership, config, sleeper, tokenManager, insEnvIdentity).new GetNewToken();
+		result = gnt.call();
+		Assert.assertNotNull(result);
+		System.out.println(result.getToken());
+		
+		config.setInstanceName("i-wef43fv04");
+		gnt = new InstanceIdentity(factory, membership, config, sleeper, tokenManager, insEnvIdentity).new GetNewToken();
+		result = gnt.call();
+		Assert.assertNotNull(result);
+		System.out.println(result.getToken());
+		
+		config.setInstanceName("i-wef43fv05");
+		gnt = new InstanceIdentity(factory, membership, config, sleeper, tokenManager, insEnvIdentity).new GetNewToken();
+		result = gnt.call();
+		Assert.assertNotNull(result);
+		System.out.println(result.getToken());
+		
+		config.setInstanceName("i-wef43fv06");
+		gnt = new InstanceIdentity(factory, membership, config, sleeper, tokenManager, insEnvIdentity).new GetNewToken();
+		result = gnt.call();
+		Assert.assertNotNull(result);
+		System.out.println(result.getToken());
 		
 		
 		

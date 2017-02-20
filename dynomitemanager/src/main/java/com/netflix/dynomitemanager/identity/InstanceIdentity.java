@@ -280,9 +280,36 @@ public class InstanceIdentity {
 			// String payload = tokenManager.createToken(my_slot,
 			// membership.getRacCount(), membership.getRacMembershipSize(),
 			// config.getDataCenter());
+			
+			my_slot = generateProperSlot(asgInstanceIds,myInstanceId);
+			
 			String payload = tokenManager.createToken(my_slot, rackMembershipSize, config.getRack());
+			
 			return factory.create(config.getDynomiteClusterName(), my_slot + hash, config.getInstanceName(),
 					config.getHostname(), config.getHostIP(), config.getZone(), null, payload, config.getRack());
+		}
+		
+		private int generateProperSlot(Map<String,String> asgInstanceIds, String myInstanceID){
+			
+			Map<String,Integer> tokens = new HashMap<>();
+			
+			// One per AZ. It will always be 3.
+			int resiliency_copies = 3;
+			
+			int counter = 0;
+			Integer current_token = 100;
+			
+			for( String k : asgInstanceIds.keySet()){
+				if (counter < resiliency_copies){
+					counter++;
+				}else{
+					current_token = current_token + 100;
+					counter = 1;
+				}
+				tokens.put(k, current_token);
+			}
+			
+			return tokens.get(myInstanceID);
 		}
 
 		public void forEachExecution() {
