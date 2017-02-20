@@ -17,7 +17,7 @@ import java.util.Map;
 public class TokenGroup {
 	
 	private Map<String,String> originalInstanceIds = null;
-	private Map<String,String> shuffledAZsInstanceIds = null;
+	private Map<String,Integer> shuffledAZsInstanceIds = null;
 	
 	private List<String> az_2a = new ArrayList<>();
 	private List<String> az_2b = new ArrayList<>();
@@ -49,29 +49,31 @@ public class TokenGroup {
 		originalInstanceIds = instanceIds;
 	}
 	
-	private Map<String,String> shuffledAZs(){
+	private Map<String,Integer> shuffledAZs(){
 		
 		// One per AZ. It will always be 3.
 		int resiliency_copies = 3;
 		int counter = 0;
+		Integer current_token = 100;
 		
 		Iterator<String> iterator2a = az_2a.iterator();
 		Iterator<String> iterator2b = az_2b.iterator();
 		Iterator<String> iterator2c = az_2c.iterator();
 		
-		Map<String,String> shuffledAZs = new HashMap<>();
+		Map<String,Integer> shuffledAZs = new HashMap<>();
 		for(String k : originalInstanceIds.keySet()){
 			
 			if (counter < resiliency_copies){
 				counter++;
 			}else{
+				current_token = current_token + 100;
 				counter = 1;
 			}
 			
 			switch(counter){
-				case (1): shuffledAZs.put( iterator2a.next() , "us-west-2a");  break;
-				case (2): shuffledAZs.put( iterator2b.next() , "us-west-2b");  break;
-				case (3): shuffledAZs.put( iterator2c.next() , "us-west-2c");  break;
+				case (1): shuffledAZs.put( iterator2a.next() , current_token);  break;
+				case (2): shuffledAZs.put( iterator2b.next() , current_token);  break;
+				case (3): shuffledAZs.put( iterator2c.next() , current_token);  break;
 			}
 
 		}
@@ -79,7 +81,7 @@ public class TokenGroup {
 		return shuffledAZs;
 	}
 
-	public Map<String, String> getShuffledAZsInstanceIds() {
+	public Map<String, Integer> getShuffledAZsInstanceIds() {
 		return shuffledAZsInstanceIds;
 	}
 

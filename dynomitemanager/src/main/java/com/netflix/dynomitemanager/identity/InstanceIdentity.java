@@ -249,7 +249,7 @@ public class InstanceIdentity {
 		public AppsInstance retriableCall() throws Exception {
 
 			// Sleep random interval - upto 15 sec
-			sleeper.sleep(new Random().nextInt(15000));
+			sleeper.sleep(new Random().nextInt(1));
 			int hash = tokenManager.regionOffset(config.getRack());
 
 			// use this hash so that the nodes are spred far away from the other
@@ -281,7 +281,8 @@ public class InstanceIdentity {
 			// membership.getRacCount(), membership.getRacMembershipSize(),
 			// config.getDataCenter());
 			
-			my_slot = generateProperSlot(asgInstanceIds,myInstanceId);
+			TokenGroup tokenGroupPerAZ = new TokenGroup(asgInstanceIds);
+			my_slot = tokenGroupPerAZ.getShuffledAZsInstanceIds().get(myInstanceId);
 			
 			String payload = tokenManager.createToken(my_slot, rackMembershipSize, config.getRack());
 			
@@ -289,30 +290,6 @@ public class InstanceIdentity {
 					config.getHostname(), config.getHostIP(), config.getZone(), null, payload, config.getRack());
 		}
 		
-		private int generateProperSlot(Map<String,String> asgInstanceIds, String myInstanceID){
-			
-			TokenGroup tokenGroupPerAZ = new TokenGroup(asgInstanceIds);
-			Map<String,Integer> tokens = new HashMap<>();
-			
-			// One per AZ. It will always be 3.
-			int resiliency_copies = 3;
-			
-			int counter = 0;
-			Integer current_token = 100;
-			
-			for( String k : tokenGroupPerAZ.getShuffledAZsInstanceIds().keySet()){
-				if (counter < resiliency_copies){
-					counter++;
-				}else{
-					current_token = current_token + 100;
-					counter = 1;
-				}
-				tokens.put(k, current_token);
-			}
-			
-			return tokens.get(myInstanceID);
-		}
-
 		public void forEachExecution() {
 			populateRacMap();
 		}
