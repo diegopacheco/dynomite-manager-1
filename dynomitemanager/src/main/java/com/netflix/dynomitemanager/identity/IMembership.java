@@ -14,6 +14,7 @@ package com.netflix.dynomitemanager.identity;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.google.inject.ImplementedBy;
 import com.netflix.dynomitemanager.sidecore.aws.AWSMembership;
@@ -28,7 +29,7 @@ public interface IMembership {
 	/**
 	 * Get a list of Instances in the current RAC
 	 */
-	public List<String> getRacMembership();
+	public Map<String,String> getRacMembership();
 
 	/**
 	 * @return Get a list of Instances if there is a cross-account RAC
