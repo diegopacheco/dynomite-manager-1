@@ -249,7 +249,7 @@ public class InstanceIdentity {
 		public AppsInstance retriableCall() throws Exception {
 
 			// Sleep random interval - upto 15 sec
-			sleeper.sleep(new Random().nextInt(1));
+			sleeper.sleep(new Random().nextInt(15000));
 			int hash = tokenManager.regionOffset(config.getRack());
 
 			// use this hash so that the nodes are spred far away from the other
