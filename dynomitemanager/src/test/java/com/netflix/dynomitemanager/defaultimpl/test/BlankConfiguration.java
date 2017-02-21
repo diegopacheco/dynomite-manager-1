@@ -133,7 +133,7 @@ public class BlankConfiguration implements IConfiguration {
 
 	@Override
 	public String getDataCenter() {
-		return null;
+		return "us-west-2";
 	}
 
 	@Override

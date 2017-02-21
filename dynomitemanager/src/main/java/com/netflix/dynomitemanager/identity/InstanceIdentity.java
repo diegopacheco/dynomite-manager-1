@@ -263,7 +263,8 @@ public class InstanceIdentity {
 				logger.info("InstanceId in ASG: " + instanceId);
 			}
 			
-			int my_slot = new ArrayList<String>(asgInstanceIds.keySet()).indexOf(myInstanceId); 
+			TokenGroup tokenGroupPerAZ = new TokenGroup(asgInstanceIds);
+			int  my_slot = tokenGroupPerAZ.getShuffledAZsInstanceIds().get(myInstanceId);
 			logger.info("my_slot ::: " + my_slot);
 
 			int rackMembershipSize;
@@ -274,15 +275,12 @@ public class InstanceIdentity {
 			}
 
 			logger.info(String.format(
-					"Trying to createToken with slot %d with rac count %d with rac membership size %d with dc %s",
-					my_slot, membership.getRacCount(), rackMembershipSize, config.getDataCenter()));
+					"Trying to createToken with slot %d with rac count %d with rac membership size %d with dc %s rack %s",
+					my_slot, membership.getRacCount(), rackMembershipSize, config.getDataCenter(), config.getRack()));
 			
 			// String payload = tokenManager.createToken(my_slot,
 			// membership.getRacCount(), membership.getRacMembershipSize(),
 			// config.getDataCenter());
-			
-			TokenGroup tokenGroupPerAZ = new TokenGroup(asgInstanceIds);
-			my_slot = tokenGroupPerAZ.getShuffledAZsInstanceIds().get(myInstanceId);
 			
 			String payload = tokenManager.createToken(my_slot, rackMembershipSize, config.getRack());
 			

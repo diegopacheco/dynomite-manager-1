@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 
  * This algorithm imply that the RACK size is always multiple of 3. So its 3, 6, 9, 12, 15. 18, 21, etc...
@@ -15,6 +18,8 @@ import java.util.Map;
  *
  */
 public class TokenGroup {
+	
+	private static final Logger logger = LoggerFactory.getLogger(TokenGroup.class);
 	
 	private Map<String,String> originalInstanceIds = null;
 	private Map<String,Integer> shuffledAZsInstanceIds = null;
@@ -34,19 +39,21 @@ public class TokenGroup {
 	
 	private void init(Map<String,String> instanceIds){
 		splitBucketPerAZ(instanceIds);
-		shuffledAZsInstanceIds = shuffledAZs();
+		this.shuffledAZsInstanceIds = shuffledAZs();
 	}
 
 	private void splitBucketPerAZ(Map<String, String> instanceIds) {
 		for(String k: instanceIds.keySet()){
-			switch(instanceIds.get(k)) {
+			switch(instanceIds.get(k).trim().toLowerCase()) {
 				case ("us-west-2a"): az_2a.add(k); break;
 				case ("us-west-2b"): az_2b.add(k); break;
 				case ("us-west-2c"): az_2c.add(k); break;
 				default: break;
 			}
 		}
-		originalInstanceIds = instanceIds;
+		this.originalInstanceIds = instanceIds;
+		logger.info("Original Instance Ids: " + originalInstanceIds );
+		logger.info("Buckets: AZ us-west-2a: " + az_2a + " AZ us-west-2b: " + az_2b + " AZ us-west-2c: " + az_2c);
 	}
 	
 	private Map<String,Integer> shuffledAZs(){
@@ -61,7 +68,7 @@ public class TokenGroup {
 		Iterator<String> iterator2c = az_2c.iterator();
 		
 		Map<String,Integer> shuffledAZs = new HashMap<>();
-		for(String k : originalInstanceIds.keySet()){
+		for(@SuppressWarnings("unused") String k : originalInstanceIds.keySet()){
 			
 			if (counter < resiliency_copies){
 				counter++;
@@ -78,6 +85,7 @@ public class TokenGroup {
 
 		}
 		
+		logger.info("Shuffled Ids: " + shuffledAZs );
 		return shuffledAZs;
 	}
 

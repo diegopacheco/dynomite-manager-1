@@ -43,22 +43,22 @@ public class FakeDBAppsInstanceFactory implements IAppsInstanceFactory{
 
 	@Override
 	public void delete(AppsInstance inst) {
-		System.out.println("delete called with: " + inst);
+		//System.out.println("delete called with: " + inst);
 	}
 
 	@Override
 	public void update(AppsInstance inst) {
-		System.out.println("update called with: " + inst);
+		//System.out.println("update called with: " + inst);
 	}
 
 	@Override
 	public void sort(List<AppsInstance> return_) {
-		System.out.println("sort called with: " + return_);
+		//System.out.println("sort called with: " + return_);
 	}
 
 	@Override
 	public void attachVolumes(AppsInstance instance, String mountPath, String device) {
-		System.out.println("attachVolumes called with: " + instance + " - " + mountPath + " - " + device);
+		//System.out.println("attachVolumes called with: " + instance + " - " + mountPath + " - " + device);
 	}
 	
 	

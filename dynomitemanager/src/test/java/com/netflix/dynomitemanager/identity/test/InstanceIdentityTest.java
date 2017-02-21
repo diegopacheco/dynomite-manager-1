@@ -1,9 +1,8 @@
 package com.netflix.dynomitemanager.identity.test;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.cassandra.thrift.Cassandra.system_add_column_family_args;
-import org.apache.commons.collections.map.HashedMap;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,7 +24,7 @@ public class InstanceIdentityTest {
 	@Test
 	public void testGetNewTokenLogic() throws Throwable{
 		
-		Map<String,String> resultSummary = new HashedMap();
+		Map<String,String> resultSummary = new HashMap<String,String> ();
 		
 		IAppsInstanceFactory factory = new FakeDBAppsInstanceFactory();
 		IMembership membership = new FakeAWSMembership(); 
