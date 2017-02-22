@@ -141,5 +141,21 @@ public class TokenManagerTest {
 		Assert.assertEquals("2610563201", token);
 		
 	}
+	
+	@Test
+	public void testCreateTokenSimulation(){
+		
+		TokenManager tm = new TokenManager();
+		String token = tm.createToken(100, 6, "asg-name1-us-west-2a");
+		Assert.assertEquals("4246741211", token);
+		
+		token = tm.createToken(200, 6, "asg-name1-us-west-2a");
+		Assert.assertEquals("2815085396", token);
+		
+		token = tm.createToken(300, 6, "asg-name1-us-west-2a");
+		Assert.assertEquals("1383429581", token);
+		
+	}
+
 
 }
