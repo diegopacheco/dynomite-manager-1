@@ -59,11 +59,25 @@ public class TokenManagerTest {
 		TokenManager tm = new TokenManager();
 		tm.createToken(-1, 0, "us-west-2");
 	}
+	
+	@Test
+	public void createTokenWorngDCTest() {
+		TokenManager tm = new TokenManager();
+		String t = tm.createToken(100, 6, null);
+		Assert.assertEquals("4246741211", t);
+	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void createTokenWorngRackCountTest() {
 		TokenManager tm = new TokenManager();
 		tm.createToken(1, -1, 2, "us-west-2");
+	}
+	
+	@Test
+	public void createTokenWorngSlot() {
+		TokenManager tm = new TokenManager();
+		String t = tm.createToken(0, 6, 2, "us-west-2");
+		Assert.assertEquals("1383429731", t);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -79,6 +93,53 @@ public class TokenManagerTest {
 		int offSet = tm.regionOffset("us-west-2");
 		Assert.assertTrue(offSet >= 1);
 		Assert.assertEquals(1383429731, offSet);
+	}
+	
+	@Test
+	public void testCreateTokenSimple(){
+		TokenManager tm = new TokenManager();
+		String token = tm.createToken(100, 6, "us-west-2");
+		Assert.assertEquals("4246741211", token);
+		
+		token = tm.createToken(200, 6, "us-west-2");
+		Assert.assertEquals("2815085396", token);
+		
+		token = tm.createToken(300, 6, "us-west-2");
+		Assert.assertEquals("1383429581", token);
+		
+		token = tm.createToken(100, 6, "us-west-2a");
+		Assert.assertEquals("4246741211", token);
+		
+		token = tm.createToken(1, 6, "us-west-2a");
+		Assert.assertEquals("2099257613", token);
+		
+		token = tm.createToken(2, 6, "us-west-2a");
+		Assert.assertEquals("2815085495", token);
+		
+		token = tm.createToken(100, 6, "us-west-2b");
+		Assert.assertEquals("4246741211", token);
+		
+		token = tm.createToken(100, 6, "us-west-2c");
+		Assert.assertEquals("4246741211", token);
+		
+		token = tm.createToken(100, 1, null);
+		Assert.assertEquals("1383429731", token);
+		
+		token = tm.createToken(1, 1, null);
+		Assert.assertEquals("1383429731", token);
+		
+		token = tm.createToken(0, 1, "us-west-1");
+		Assert.assertEquals("1383429731", token);
+		
+		token = tm.createToken(1, 1, "");
+		Assert.assertEquals("1383429731", token);
+		
+		token = tm.createToken(100, 6, "It_does_not_matter_this_will_be_ok");
+		Assert.assertEquals("4246741211", token);
+		
+		token = tm.createToken(100, 7, "");
+		Assert.assertEquals("2610563201", token);
+		
 	}
 
 }
