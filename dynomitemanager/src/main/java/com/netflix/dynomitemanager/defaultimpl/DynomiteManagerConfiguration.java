@@ -1,20 +1,17 @@
-/**
- * Copyright 2016 Netflix, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.netflix.dynomitemanager.defaultimpl;
 
+/**
+# Copyright 2016 Netflix, Inc. and [Dynomite Manager contributors](https://github.com/Netflix/dynomite-manager/blob/dev/CONTRIBUTORS.md)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -45,6 +42,7 @@ import com.netflix.dynomitemanager.sidecore.IStorageProxy;
 import com.netflix.dynomitemanager.sidecore.config.InstanceDataRetriever;
 import com.netflix.dynomitemanager.sidecore.utils.RetryableCallable;
 
+
 /**
  * Define the list of available Dynomite Manager configuration options, then set options based on the environment and an
  * external configuration.
@@ -58,8 +56,7 @@ import com.netflix.dynomitemanager.sidecore.utils.RetryableCallable;
  * </ul>
  */
 @Singleton
-public class DynomitemanagerConfiguration implements IConfiguration {
-	
+public class DynomiteManagerConfiguration implements IConfiguration {
     public static final String DYNOMITEMANAGER_PRE = "dm";
     public static final String CASSANDRA_PREFIX = "cassandra";
     public static final String DYNOMITE_PREFIX = "dynomite";
@@ -290,7 +287,7 @@ public class DynomitemanagerConfiguration implements IConfiguration {
     // AWS Dual Account
     private static final boolean DEFAULT_DUAL_ACCOUNT = false;
 
-    private static final Logger logger = LoggerFactory.getLogger(DynomitemanagerConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(DynomiteManagerConfiguration.class);
 
     private final String AUTO_SCALE_GROUP_NAME = System.getenv("AUTO_SCALE_GROUP");
     private static final String DEFAULT_INSTANCE_DATA_RETRIEVER = "com.netflix.dynomitemanager.sidecore.config.AwsInstanceDataRetriever";
@@ -352,7 +349,7 @@ public class DynomitemanagerConfiguration implements IConfiguration {
     private String NETWORK_VPC; // Fetch the vpc id of running instance
 
     @Inject
-    public DynomitemanagerConfiguration(ICredential provider, IConfigSource configSource,
+    public DynomiteManagerConfiguration(ICredential provider, IConfigSource configSource,
 	    InstanceDataRetriever retriever, InstanceEnvIdentity insEnvIdentity,
 	    IStorageProxy storageProxy) {
 	this.retriever = retriever;

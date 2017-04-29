@@ -16,15 +16,32 @@
 
 package com.netflix.dynomitemanager.sidecore.config;
 
-public interface InstanceDataRetriever
-{
-    String getRac();
-    String getPublicHostname();
-    String getPublicIP();
-    String getInstanceId();
-    String getInstanceType();
-    String getMac(); //fetch id of the network interface for running instance
-    String getVpcId(); //the id of the vpc for running instance
-    String getSecurityGroupName();
-}
 
+public interface InstanceDataRetriever {
+
+    /**
+     * Get the data center (AWS region) for the current instance.
+     * @return the instance's data center (AWS region)
+     */
+    String getDataCenter();
+
+    /**
+     * Get the rack (AWS AZ) for the current instance.
+     * @return the instance's rack (AWS AZ)
+     */
+    String getRac();
+
+	String getPublicHostname();
+
+	String getPublicIP();
+
+	String getInstanceId();
+
+	String getInstanceType();
+
+	String getMac(); //fetch id of the network interface for running instance
+
+	String getVpcId(); //the id of the vpc for running instance
+
+	String getSecurityGroupName();
+}

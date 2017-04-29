@@ -1,3 +1,5 @@
+package com.netflix.dynomitemanager.sidecore;
+
 /**
  * Copyright 2016 Netflix, Inc.
  *
@@ -13,24 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.netflix.dynomitemanager;
-
-import java.io.IOException;
-
-import com.google.inject.ImplementedBy;
-import com.netflix.dynomitemanager.defaultimpl.FloridaProcessManager;
-
-/**
- * Interface to aid in starting and stopping Dynomite.
- *
- */
-@ImplementedBy(FloridaProcessManager.class)
-public interface IFloridaProcess
-{
-    void start() throws IOException;
-
-    void stop() throws IOException;
-    
-    boolean dynomiteCheck();
-
+public enum Bootstrap {
+    NOT_STARTED, CANNOT_CONNECT_FAIL, WARMUP_ERROR_FAIL, RETRIES_FAIL, EXPIRED_BOOTSTRAPTIME_FAIL, IN_SYNC_SUCCESS,
 }

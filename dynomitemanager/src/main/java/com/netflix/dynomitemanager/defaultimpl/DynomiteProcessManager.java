@@ -1,7 +1,21 @@
-package com.netflix.dynomitemanager.dynomite;
+/**
+ * Copyright 2016 Netflix, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.netflix.dynomitemanager.defaultimpl;
 
-import static com.netflix.dynomitemanager.defaultimpl.DynomitemanagerConfiguration.DYNO_PORT;
-import static com.netflix.dynomitemanager.defaultimpl.DynomitemanagerConfiguration.LOCAL_ADDRESS;
+import static com.netflix.dynomitemanager.defaultimpl.DynomiteManagerConfiguration.LOCAL_ADDRESS;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -21,6 +35,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.netflix.dynomitemanager.InstanceState;
+import com.netflix.dynomitemanager.dynomite.IDynomiteProcess;
 import com.netflix.dynomitemanager.sidecore.IConfiguration;
 import com.netflix.dynomitemanager.sidecore.utils.Sleeper;
 
@@ -28,6 +43,7 @@ import redis.clients.jedis.Jedis;
 
 @Singleton
 public class DynomiteProcessManager implements IDynomiteProcess {
+
     private static final Logger logger = LoggerFactory.getLogger(DynomiteProcessManager.class);
     private static final String SUDO_STRING = "/usr/bin/sudo";
     private static final int SCRIPT_EXECUTE_WAIT_TIME_MS = 5000;
@@ -46,7 +62,7 @@ public class DynomiteProcessManager implements IDynomiteProcess {
     }
 
     protected void setDynomiteEnv(Map<String, String> env) {
-	env.put("MBUF_SIZE", String.valueOf(config.getDynomiteMbufSize()));
+	env.put("MBUF_SIZE", String.valueOf(config.getDynomiteMBufSize()));
 	if (config.getDynomiteMaxAllocatedMessages() > 0) {
 	    env.put("ALLOC_MSGS", String.valueOf(config.getDynomiteMaxAllocatedMessages()));
 	}
@@ -149,7 +165,7 @@ public class DynomiteProcessManager implements IDynomiteProcess {
 
     /**
      * Ping Dynomite to perform a basic health check.
-     * 
+     *
      * @param dynomiteJedis
      *            the Jedis client with a connection to Dynomite.
      * @return true if Dynomite replies to PING with PONG, else false.
@@ -165,11 +181,11 @@ public class DynomiteProcessManager implements IDynomiteProcess {
 
     /**
      * Basic health check for Dynomite.
-     * 
+     *
      * @return true if health check passes, or false if health check fails.
      */
     private boolean dynomiteRedisCheck() {
-	Jedis dynomiteJedis = new Jedis(LOCAL_ADDRESS, DYNO_PORT, 5000);
+        Jedis dynomiteJedis = new Jedis(LOCAL_ADDRESS, config.getDynomiteClientPort(), 5000);
 	try {
 	    dynomiteJedis.connect();
 	    if (!dynomiteRedisPing(dynomiteJedis)) {

@@ -30,80 +30,75 @@ import com.netflix.dynomitemanager.sidecore.scheduler.SimpleTimer;
 import com.netflix.dynomitemanager.sidecore.scheduler.Task;
 import com.netflix.dynomitemanager.sidecore.scheduler.TaskTimer;
 
-
+/**
+ * Update the security access control list, such as the inbound connections list in an AWS Security Group.
+ */
 @Singleton
-public class UpdateSecuritySettings extends Task
-{
-    public static final String JOBNAME = "Update_SG";
-    public static boolean firstTimeUpdated = false;
+public class UpdateSecuritySettings extends Task {
 
-    private static final Random ran = new Random();
-    private final IMembership membership;
-    private final IAppsInstanceFactory factory;
+	public static final String JOBNAME = "Update_SG";
+	public static boolean firstTimeUpdated = false;
 
-    @Inject
-    public UpdateSecuritySettings(IConfiguration config, IMembership membership, IAppsInstanceFactory factory)
-    {
-        super(config);
-        this.membership = membership;
-        this.factory = factory;
-    }
+	private static final Random ran = new Random();
+	private final IMembership membership;
+	private final IAppsInstanceFactory factory;
 
-    @Override
-    public void execute()
-    {
-        // if seed dont execute.
-        int port = config.getPeerListenerPort();
-        List<String> acls = membership.listACL(port, port);
-        List<AppsInstance> instances = factory.getAllIds(config.getAppName());
+	@Inject
+	public UpdateSecuritySettings(IConfiguration config, IMembership membership, IAppsInstanceFactory factory) {
+		super(config);
+		this.membership = membership;
+		this.factory = factory;
+	}
 
-        // iterate to add...
-        List<String> add = Lists.newArrayList();
-        for (AppsInstance instance : factory.getAllIds(config.getAppName()))
-        {
-            String range = instance.getHostIP() + "/32";
-            if (!acls.contains(range))
-                add.add(range);
-        }
-        if (add.size() > 0)
-        {
-            membership.addACL(add, port, port);
-            firstTimeUpdated = true;
-        }
+	@Override
+	public void execute() {
+		// if seed does not execute.
+		int port = config.getDynomitePeerPort();
+		List<String> acls = membership.listACL(port, port);
+		List<AppsInstance> instances = factory.getAllIds(config.getDynomiteClusterName());
 
-        // just iterate to generate ranges.
-        List<String> currentRanges = Lists.newArrayList();
-        for (AppsInstance instance : instances)
-        {
-            String range = instance.getHostIP() + "/32";
-            currentRanges.add(range);
-        }
+		// iterate to add...
+		List<String> add = Lists.newArrayList();
+		for (AppsInstance instance : factory.getAllIds(config.getDynomiteClusterName())) {
+			String range = instance.getHostIP() + "/32";
+			if (!acls.contains(range))
+				add.add(range);
+		}
+		if (add.size() > 0) {
+			membership.addACL(add, port, port);
+			firstTimeUpdated = true;
+		}
 
-        // iterate to remove...
-        List<String> remove = Lists.newArrayList();
-        for (String acl : acls)
-            if (!currentRanges.contains(acl)) // if not found then remove....
-                remove.add(acl);
-        if (remove.size() > 0)
-        {
-            membership.removeACL(remove, port, port);
-            firstTimeUpdated = true;
-        }
-    }
+		// just iterate to generate ranges.
+		List<String> currentRanges = Lists.newArrayList();
+		for (AppsInstance instance : instances) {
+			String range = instance.getHostIP() + "/32";
+			currentRanges.add(range);
+		}
 
-    public static TaskTimer getTimer(InstanceIdentity id)
-    {
-        SimpleTimer return_;
-        if (id.isSeed())
-            return_ = new SimpleTimer(JOBNAME, 120 * 1000 + ran.nextInt(120 * 1000));
-        else
-            return_ = new SimpleTimer(JOBNAME);
-        return return_;
-    }
+		// iterate to remove...
+		List<String> remove = Lists.newArrayList();
+		for (String acl : acls)
+			if (!currentRanges.contains(acl)) // if not found then remove....
+				remove.add(acl);
+		if (remove.size() > 0) {
+			membership.removeACL(remove, port, port);
+			firstTimeUpdated = true;
+		}
+	}
 
-    @Override
-    public String getName()
-    {
-        return JOBNAME;
-    }
+	public static TaskTimer getTimer(InstanceIdentity id) {
+		SimpleTimer return_;
+		if (id.isSeed())
+			return_ = new SimpleTimer(JOBNAME, 120 * 1000 + ran.nextInt(120 * 1000));
+		else
+			return_ = new SimpleTimer(JOBNAME);
+		return return_;
+	}
+
+	@Override
+	public String getName() {
+		return JOBNAME;
+	}
+
 }

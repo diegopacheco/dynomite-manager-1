@@ -33,9 +33,11 @@ import com.google.inject.Module;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
-import com.netflix.dynomitemanager.FloridaServer;
-import com.netflix.dynomitemanager.IFloridaProcess;
+import com.netflix.dynomitemanager.DynomiteProcessManager;
+import com.netflix.dynomitemanager.IInstanceState;
+import com.netflix.dynomitemanager.InstanceState;
 import com.netflix.dynomitemanager.dynomite.DynomiteStandardTuner;
+import com.netflix.dynomitemanager.dynomite.IDynomiteProcess;
 import com.netflix.dynomitemanager.identity.CassandraInstanceFactory;
 import com.netflix.dynomitemanager.identity.DefaultVpcInstanceEnvIdentity;
 import com.netflix.dynomitemanager.identity.IAppsInstanceFactory;
@@ -58,8 +60,8 @@ import com.netflix.dynomitemanager.sidecore.storage.RedisStorageProxy;
 import com.netflix.dynomitemanager.sidecore.storage.StorageProxy;
 import com.netflix.dynomitemanager.sidecore.utils.FloridaHealthCheckHandler;
 import com.netflix.dynomitemanager.sidecore.utils.ProcessTuner;
+import com.netflix.dynomitemanager.supplier.CassandraLocalHostsSupplier;
 import com.netflix.dynomitemanager.supplier.HostSupplier;
-import com.netflix.dynomitemanager.supplier.LocalHostsSupplier;
 import com.netflix.karyon.spi.HealthCheckHandler;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
@@ -91,7 +93,7 @@ public class InjectedWebListener extends GuiceServletContextListener {
         // Initialize Florida Server
         try
         {       
-            injector.getInstance(FloridaServer.class).initialize();
+            injector.getInstance(DynomiteProcessManager.class).start();
         }
         catch (Exception e)
         {
@@ -125,13 +127,13 @@ public class InjectedWebListener extends GuiceServletContextListener {
             binder().bind(ProcessTuner.class).to(DynomiteStandardTuner.class);
             binder().bind(IAppsInstanceFactory.class).to(CassandraInstanceFactory.class);
             binder().bind(SchedulerFactory.class).to(StdSchedulerFactory.class).asEagerSingleton();
-            binder().bind(IFloridaProcess.class).to(FloridaProcessManager.class);
+            binder().bind(IDynomiteProcess.class).to(DynomiteProcessManager.class);
             binder().bind(StorageProxy.class).to(RedisStorageProxy.class);
             binder().bind(InstanceDataRetriever.class).to(VpcInstanceDataRetriever.class);
             //binder().bind(InstanceDataRetriever.class).to(LocalInstanceDataRetriever.class);            
             //binder().bind(HostSupplier.class).to(EurekaHostsSupplier.class);
-            binder().bind(HostSupplier.class).to(LocalHostsSupplier.class);
-            
+            //binder().bind(HostSupplier.class).to(LocalHostsSupplier.class);
+            binder().bind(HostSupplier.class).to(CassandraLocalHostsSupplier.class);
             
             //binder().bind(InstanceEnvIdentity.class).to(LocalInstanceEnvIdentity.class);
             binder().bind(HealthCheckHandler.class).to(FloridaHealthCheckHandler.class).asEagerSingleton();
@@ -140,6 +142,7 @@ public class InjectedWebListener extends GuiceServletContextListener {
  //           binder().bind(GuiceJobFactory.class).asEagerSingleton();
             
             binder().bind(JedisFactory.class).to(SimpleJedisFactory.class);
+            binder().bind(IInstanceState.class).to(InstanceState.class);
             
             /* AWS binding */
             bind(IMembership.class).to(AWSMembership.class);
@@ -148,6 +151,8 @@ public class InjectedWebListener extends GuiceServletContextListener {
             binder().bind(InstanceEnvIdentity.class).to(DefaultVpcInstanceEnvIdentity.class).asEagerSingleton();
             bind(Backup.class).to(S3Backup.class);
             bind(Restore.class).to(S3Restore.class);
+            
+            
 
         }
     }

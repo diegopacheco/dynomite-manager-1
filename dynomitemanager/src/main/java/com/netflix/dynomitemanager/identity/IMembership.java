@@ -23,58 +23,64 @@ import com.netflix.dynomitemanager.sidecore.aws.AWSMembership;
 
 /**
  * Interface to manage membership meta information such as size of RAC, list of
- * nodes in RAC etc. Also perform ACL updates used in multi-regional clusters
+ * nodes in RAC etc. Also perform ACL updates used in multi-regional clusters.
  */
 @ImplementedBy(AWSMembership.class)
-public interface IMembership
-{
-    /**
-     * Get a list of Instances in the current RAC
-     */
-    public List<String> getRacMembership();
-    
-    /**
-     * @return Get a list of Instances if there is a cross-account RAC
-     */
-    public List<String> getCrossAccountRacMembership();
+public interface IMembership {
 
-    /**
-     * @return Size of current RAC
-     */
-    public int getRacMembershipSize();
+	/**
+	 * Get a list of Instances in the current RAC
+	 */
+	public List<String> getRacMembership();
 
-    /**
-     * Number of RACs
-     */
-    public int getRacCount();
+	/**
+	 * @return Get a list of Instances if there is a cross-account RAC
+	 */
+	public List<String> getCrossAccountRacMembership();
 
-    /**
-     * Add security group ACLs
-     * 
-     * @param listIPs
-     * @param from
-     * @param to
-     */
-    public void addACL(Collection<String> listIPs, int from, int to);
+	/**
+	 * @return Size of current RAC
+	 */
+	public int getRacMembershipSize();
 
-    /**
-     * Remove security group ACLs
-     * 
-     * @param listIPs
-     * @param from
-     * @param to
-     */
-    public void removeACL(Collection<String> listIPs, int from, int to);
+	/**
+	 * @return Size of the cross account RAC
+	 */
+	public int getCrossAccountRacMembershipSize();
 
-    /**
-     * List all ACLs
-     */
-    public List<String> listACL(int from, int to);
+	/**
+	 * Number of RACs
+	 */
+	public int getRacCount();
 
-    /**
-     * Expand the membership size by 1.
-     * 
-     * @param count
-     */
-    public void expandRacMembership(int count);
+	/**
+	 * Add security group ACLs
+	 *
+	 * @param listIPs
+	 * @param from
+	 * @param to
+	 */
+	public void addACL(Collection<String> listIPs, int from, int to);
+
+	/**
+	 * Remove security group ACLs
+	 *
+	 * @param listIPs
+	 * @param from
+	 * @param to
+	 */
+	public void removeACL(Collection<String> listIPs, int from, int to);
+
+	/**
+	 * List all ACLs
+	 */
+	public List<String> listACL(int from, int to);
+
+	/**
+	 * Expand the membership size by 1.
+	 *
+	 * @param count
+	 */
+	public void expandRacMembership(int count);
+
 }
