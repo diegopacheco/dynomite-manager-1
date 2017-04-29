@@ -20,11 +20,11 @@ import java.util.List;
 import com.netflix.dynomitemanager.sidecore.IConfiguration;
 
 /**
- * Blanck IConfiguration class used for tests.
- * 
+ * Blank IConfiguration class used for tests.
+ *
  * @author diegopacheco
  * @author ipapapa
- *
+ * @author akbarahmed
  */
 public class BlankConfiguration implements IConfiguration {
 
@@ -44,22 +44,22 @@ public class BlankConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public boolean isPersistenceEnabled() {
+	public boolean isRedisPersistenceEnabled() {
 		return false;
 	}
 
 	@Override
-	public boolean isMultiRegionedCluster() {
+	public String getRedisPersistenceType() {
+		return null;
+	}
+
+	@Override
+	public boolean isDynomiteMultiDC() {
 		return false;
 	}
 
 	@Override
-	public boolean isHealthCheckEnable() {
-		return false;
-	}
-
-	@Override
-	public boolean isEurekaHostSupplierEnabled() {
+	public boolean isEurekaHostsSupplierEnabled() {
 		return false;
 	}
 
@@ -69,7 +69,7 @@ public class BlankConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public boolean isAof() {
+	public boolean isRedisAofEnabled() {
 		return false;
 	}
 
@@ -93,7 +93,7 @@ public class BlankConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public String getWriteConsistency() {
+	public String getDynomiteWriteConsistency() {
 		return null;
 	}
 
@@ -103,27 +103,12 @@ public class BlankConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public String getTokens() {
-		return null;
-	}
-
-	@Override
 	public int getTimeout() {
 		return 0;
 	}
 
 	@Override
-	public String getStorageStopScript() {
-		return null;
-	}
-
-	@Override
-	public String getStorageStartupScript() {
-		return null;
-	}
-
-	@Override
-	public int getStorageMemPercent() {
+	public int getDatastoreMaxMemoryPercent() {
 		return 0;
 	}
 
@@ -133,17 +118,12 @@ public class BlankConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public String getSeedProviderName() {
+	public String getDynomiteSeedProvider() {
 		return null;
 	}
 
 	@Override
-	public int getSecuredPeerListenerPort() {
-		return 0;
-	}
-
-	@Override
-	public String getSecuredOption() {
+	public String getDynomiteIntraClusterSecurity() {
 		return null;
 	}
 
@@ -153,12 +133,12 @@ public class BlankConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public String getRegion() {
+	public String getDataCenter() {
 		return null;
 	}
 
 	@Override
-	public String getReadConsistency() {
+	public String getDynomiteReadConsistency() {
 		return null;
 	}
 
@@ -178,27 +158,22 @@ public class BlankConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public boolean getPreconnect() {
+	public boolean getDynomiteStoragePreconnect() {
 		return false;
 	}
 
 	@Override
-	public String getPersistenceLocation() {
+	public String getRedisDataDir() {
 		return null;
 	}
 
 	@Override
-	public int getPeerListenerPort() {
+	public int getDynomitePeerPort() {
 		return 0;
 	}
 
 	@Override
-	public String getMetadataKeyspace() {
-		return null;
-	}
-
-	@Override
-	public int getDynomiteMbufSize() {
+	public int getDynomiteMBufSize() {
 		return 0;
 	}
 
@@ -208,7 +183,7 @@ public class BlankConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public int getListenerPort() {
+	public int getDynomiteClientPort() {
 		return 0;
 	}
 
@@ -228,12 +203,12 @@ public class BlankConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public String getHash() {
+	public String getDynomiteHashAlgorithm() {
 		return null;
 	}
 
 	@Override
-	public int getGossipInterval() {
+	public int getDynomiteGossipInterval() {
 		return 0;
 	}
 
@@ -248,13 +223,8 @@ public class BlankConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public String getCommaSeparatedCassandraHostNames() {
+	public String getCassandraSeeds() {
 		return null;
-	}
-
-	@Override
-	public int getClusterType() {
-		return 0; //DynomitemanagerConfiguration.DYNO_REDIS;
 	}
 
 	@Override
@@ -263,8 +233,8 @@ public class BlankConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public int getCassandraThriftPortForAstyanax() {
-		return 0;
+	public int getCassandraThriftPort() {
+		return 9160;
 	}
 
 	@Override
@@ -278,7 +248,7 @@ public class BlankConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public String getBootClusterName() {
+	public String getCassandraClusterName() {
 		return null;
 	}
 
@@ -313,12 +283,12 @@ public class BlankConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public String getAppName() {
+	public String getDynomiteClusterName() {
 		return null;
 	}
 
 	@Override
-	public String getAppHome() {
+	public String getDynomiteInstallDir() {
 		return null;
 	}
 
@@ -341,12 +311,12 @@ public class BlankConfiguration implements IConfiguration {
 	public String getACLGroupName() {
 		return null;
 	}
-	
+
 	@Override
 	public String getClassicAWSRoleAssumptionArn() {
 		return null;
 	}
-	
+
 	@Override
 	public String getVpcAWSRoleAssumptionArn() {
 		return null;
@@ -357,34 +327,67 @@ public class BlankConfiguration implements IConfiguration {
 		return false;
 	}
 
-    @Override
-    public boolean isForceWarm() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	@Override
+	public boolean isForceWarm() {
+		return false;
+	}
 
-    @Override
-    public String getRedisCompatibleEngine() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public String getCrossAccountRack() {
+		return null;
+	}
 
-    @Override
-    public int getWriteBufferSize() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+	@Override
+	public String getDatastoreEngine() {
+		return null;
+	}
 
-    @Override
-    public int getArdbRocksDBMaxWriteBufferNumber() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+	@Override
+	public String getRedisConf() {
+		return null;
+	}
 
-    @Override
-    public int getArdbRocksDBMinWriteBuffersToMerge() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+	@Override
+	public String getRedisStartScript() {
+		return null;
+	}
+
+	@Override
+	public String getRedisStopScript() {
+		return null;
+	}
+
+	// ARDB RocksDB
+	// ============
+
+	@Override
+	public String getArdbRocksDBConf() {
+		return null;
+	}
+
+	@Override
+	public String getArdbRocksDBStartScript() {
+		return null;
+	}
+
+	@Override
+	public String getArdbRocksDBStopScript() {
+		return null;
+	}
+
+	@Override
+	public int getArdbRocksDBWriteBufferSize() {
+		return 0;
+	}
+
+	@Override
+	public int getArdbRocksDBMaxWriteBufferNumber() {
+		return 0;
+	}
+
+	@Override
+	public int getArdbRocksDBMinWriteBuffersToMerge() {
+		return 0;
+	}
 
 }
