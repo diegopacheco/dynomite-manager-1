@@ -18,9 +18,9 @@ package com.netflix.dynomitemanager.sidecore.utils;
 import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.netflix.dynomitemanager.IFloridaProcess;
 import com.netflix.dynomitemanager.InstanceState;
 import com.netflix.dynomitemanager.defaultimpl.JedisConfiguration;
+import com.netflix.dynomitemanager.dynomite.IDynomiteProcess;
 import com.netflix.dynomitemanager.sidecore.IConfiguration;
 import com.netflix.dynomitemanager.sidecore.scheduler.SimpleTimer;
 import com.netflix.dynomitemanager.sidecore.scheduler.Task;
@@ -76,11 +76,11 @@ public class ProcessMonitorTask extends Task implements StatefulJob {
     private final InstanceState instanceState;
     private final StorageProxy iStorageProxy;
     private final TaskScheduler scheduler;
-    private final IFloridaProcess dynProcess;
+    private final IDynomiteProcess dynProcess;
 
     @Inject
     protected ProcessMonitorTask(IConfiguration config, InstanceState instanceState,
-                                 StorageProxy iStorageProxy, TaskScheduler scheduler, IFloridaProcess dynProcess) {
+                                 StorageProxy iStorageProxy, TaskScheduler scheduler, IDynomiteProcess dynProcess) {
         super(config);
         this.config = config;
         this.instanceState = instanceState;
