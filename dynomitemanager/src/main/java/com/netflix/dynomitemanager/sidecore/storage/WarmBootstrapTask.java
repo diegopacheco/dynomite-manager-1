@@ -84,7 +84,11 @@ public class WarmBootstrapTask extends Task {
 			this.sleeper.sleepQuietly(5000);
 
 			String[] peers = getLocalPeersWithSameTokensRange();
-
+			if (peers!=null)
+				logger.info("Peers found: " + peers.length);
+			else
+				logger.info("NO Peers found! ");
+			
 			// try one node only for now
 			// TODOs: if this peer is not good, try the next one until we can
 			// get the data

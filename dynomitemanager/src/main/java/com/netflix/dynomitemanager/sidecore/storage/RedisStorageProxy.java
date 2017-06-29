@@ -333,6 +333,8 @@ public class RedisStorageProxy implements IStorageProxy {
 			// token
 			logger.info("Peer node [" + peer + "] has the same token!");
 			peerJedis = JedisUtils.connect(peer, REDIS_PORT);
+			logger.info("Peer: " + peer + " - Jedis: " + peerJedis);
+			
 			if (peerJedis != null && isAlive()) { // Checking if there are
 				// peers, and if so if they
 				// are alive
