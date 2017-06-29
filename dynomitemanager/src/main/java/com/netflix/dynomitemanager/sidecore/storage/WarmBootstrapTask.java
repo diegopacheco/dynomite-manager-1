@@ -143,9 +143,9 @@ public class WarmBootstrapTask extends Task {
 			// is important as there are
 			// cases that Dynomite reaches the 1M messages limit and is
 			// inaccessible after bootstrap.
-			if (this.dynProcess.dynomiteCheck()) {
-				logger.error("Dynomite is up since warm up succeeded");
-			}
+			//if (this.dynProcess.dynomiteCheck()) {
+			//	logger.error("Dynomite is up since warm up succeeded");
+			//}
 			
 			// finalizing bootstrap
 			this.state.setBootstrapping(false);
