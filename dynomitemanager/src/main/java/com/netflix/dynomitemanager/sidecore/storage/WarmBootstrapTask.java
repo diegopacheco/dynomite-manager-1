@@ -146,9 +146,20 @@ public class WarmBootstrapTask extends Task {
 			if (this.dynProcess.dynomiteCheck()) {
 				logger.error("Dynomite is up since warm up succeeded");
 			}
+			
 			// finalizing bootstrap
 			this.state.setBootstrapping(false);
 		}
+
+		// Force to start dynomite and Redis no matter if bootstart works or not.
+		logger.info("Process Status: " + dynProcess.dynomiteCheck());
+		if (!dynProcess.dynomiteCheck()){
+			logger.info("Forcing Redis and Dynomite processs to start... ");
+			this.storageProcessMgr.start();
+			this.dynProcess.start();
+			logger.info("Redis and Dynomite Process should be started! ");
+		}
+		
 	}
 
 	@Override
