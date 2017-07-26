@@ -91,6 +91,13 @@ public class RedisStorageProxy implements IStorageProxy {
 			this.localJedis = JedisUtils.connect(REDIS_ADDRESS, REDIS_PORT);
 		}
 	}
+	
+	
+	private void foceRedisReconnect() {
+		// After backup/restore connection need to be re-stablished otherwise does not work.
+		logger.info("Connecting to Redis.");
+		this.localJedis = JedisUtils.connect(REDIS_ADDRESS, REDIS_PORT);
+	}
 
 	/**
 	 * A wrapper function around JedisUtils to disconnect from Redis
@@ -236,7 +243,8 @@ public class RedisStorageProxy implements IStorageProxy {
 
 	@Override
 	public boolean loadingData() {
-		localRedisConnect();
+		foceRedisReconnect();
+		//localRedisConnect();
 		logger.info("loading AOF from the drive");
 		String peerRedisInfo = null;
 		int retry = 0;
