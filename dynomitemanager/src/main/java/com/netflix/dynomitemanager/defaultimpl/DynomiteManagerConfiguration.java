@@ -706,7 +706,8 @@ public class DynomiteManagerConfiguration implements IConfiguration {
 
 	@Override
 	public int getTimeout() {
-		return configSource.get(CONFIG_DYNO_REQ_TIMEOUT_NAME, DEFAULT_DYNO_REQ_TIMEOUT_IN_MILLISEC);
+		return getIntProperty("DM_REQUEST_TIMEOUT", CONFIG_DYNO_REQ_TIMEOUT_NAME, DEFAULT_DYNO_REQ_TIMEOUT_IN_MILLISEC);
+		//return configSource.get(CONFIG_DYNO_REQ_TIMEOUT_NAME, DEFAULT_DYNO_REQ_TIMEOUT_IN_MILLISEC);
 	}
 
 	public boolean isWarmBootstrap() {
