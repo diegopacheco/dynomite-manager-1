@@ -1,6 +1,16 @@
 package com.netflix.nfsidecar.tokensdb;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Inject;
@@ -17,18 +27,19 @@ import com.netflix.astyanax.connectionpool.impl.ConnectionPoolConfigurationImpl;
 import com.netflix.astyanax.connectionpool.impl.ConnectionPoolType;
 import com.netflix.astyanax.connectionpool.impl.CountingConnectionPoolMonitor;
 import com.netflix.astyanax.impl.AstyanaxConfigurationImpl;
-import com.netflix.astyanax.model.*;
+import com.netflix.astyanax.model.Column;
+import com.netflix.astyanax.model.ColumnFamily;
+import com.netflix.astyanax.model.ColumnList;
+import com.netflix.astyanax.model.CqlResult;
+import com.netflix.astyanax.model.Row;
 import com.netflix.astyanax.serializers.StringSerializer;
 import com.netflix.astyanax.thrift.ThriftFamilyFactory;
 import com.netflix.astyanax.util.TimeUUIDUtils;
 import com.netflix.nfsidecar.config.CassCommonConfig;
 import com.netflix.nfsidecar.config.CommonConfig;
 import com.netflix.nfsidecar.identity.AppsInstance;
+import com.netflix.nfsidecar.identity.InstanceIdentityUniqueGenerator;
 import com.netflix.nfsidecar.supplier.HostSupplier;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Singleton
 public class InstanceDataDAOCassandra {
@@ -108,8 +119,13 @@ public class InstanceDataDAOCassandra {
     }
 
     public void createInstanceEntry(AppsInstance instance) throws Exception {
-        logger.info("*** Creating New Instance Entry ***");
+        
+    	logger.info("*** Creating New Instance Entry ***");
         String key = getRowKey(instance);
+        
+        String uniqueID = InstanceIdentityUniqueGenerator.createUniqueID(instance.getInstanceId());
+		logger.info("*** Checking for Instances with app: {}, id: {}, rackName {} ",new Object[]{instance.getApp(),uniqueID,instance.getRack()});
+        
         // If the key exists throw exception
         if (getInstance(instance.getApp(), instance.getRack(), instance.getId()) != null) {
             logger.info(String.format("Key already exists: %s", key));
@@ -121,7 +137,7 @@ public class InstanceDataDAOCassandra {
         try {
             MutationBatch m = bootKeyspace.prepareMutationBatch();
             ColumnListMutation<String> clm = m.withRow(CF_TOKENS, key);
-            clm.putColumn(CN_ID, Integer.toString(instance.getId()), null);
+            clm.putColumn(CN_ID, uniqueID, null);
             clm.putColumn(CN_APPID, instance.getApp(), null);
             clm.putColumn(CN_AZ, instance.getZone(), null);
             clm.putColumn(CN_DC, commonConfig.getRack(), null);
@@ -202,8 +218,9 @@ public class InstanceDataDAOCassandra {
         getLock(instance);
 
         // Delete the row
-        String key = findKey(instance.getApp(), String.valueOf(instance.getId()), instance.getDatacenter(),
-                instance.getRack());
+        String uniqueID = InstanceIdentityUniqueGenerator.createUniqueID(instance.getInstanceId());
+        String key = findKey(instance.getApp(), uniqueID, instance.getDatacenter(),instance.getRack());
+        
         if (key == null)
             return; // don't fail it
 
@@ -226,7 +243,7 @@ public class InstanceDataDAOCassandra {
 
     }
 
-    public AppsInstance getInstance(String app, String rack, int id) {
+    public AppsInstance getInstance(String app, String rack, String id) {
         Set<AppsInstance> set = getAllInstances(app);
         for (AppsInstance ins : set) {
             if (ins.getId() == id && ins.getRack().equals(rack))
@@ -311,7 +328,7 @@ public class InstanceDataDAOCassandra {
         ins.setZone(cmap.get(CN_AZ));
         ins.setHost(cmap.get(CN_HOSTNAME));
         ins.setHostIP(cmap.get(CN_EIP));
-        ins.setId(Integer.parseInt(cmap.get(CN_ID)));
+        ins.setId(cmap.get(CN_ID));
         ins.setInstanceId(cmap.get(CN_INSTANCEID));
         ins.setDatacenter(cmap.get(CN_LOCATION));
         ins.setRack(cmap.get(CN_DC));

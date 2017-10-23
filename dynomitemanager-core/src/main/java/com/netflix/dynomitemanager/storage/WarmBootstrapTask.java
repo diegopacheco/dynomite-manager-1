@@ -139,12 +139,19 @@ public class WarmBootstrapTask extends Task {
 	     * is important as there are cases that Dynomite reaches the 1M
 	     * messages limit and is unaccessible after bootstrap.
 	     */
-	    if (this.dynProcess.dynomiteCheck()) {
-		logger.error("Dynomite is up since warm up succeeded");
-	    }
+//	    if (this.dynProcess.dynomiteCheck()) {
+//		logger.error("Dynomite is up since warm up succeeded");
+//	    }
 	    // finalizing bootstrap
 	    this.state.setBootstrapping(false);
 	}
+	
+	// Force to start dynomite and Redis no matter if bootstart works or not.
+	logger.info("Forcing Redis and Dynomite processs to start... ");
+	this.storageProcessMgr.start();
+	this.dynProcess.start();
+	logger.info("Redis and Dynomite Process should be started! ");
+	
     }
 
     @Override

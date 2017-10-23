@@ -8,7 +8,8 @@ public class DefaultConfigSource extends CompositeConfigSource {
   @Inject
   public DefaultConfigSource(final PropertiesConfigSource simpleDBConfigSource,
                            final PropertiesConfigSource propertiesConfigSource,
-                           final SystemPropertiesConfigSource systemPropertiesConfigSource) {
-    super(simpleDBConfigSource, propertiesConfigSource, systemPropertiesConfigSource);
+                           final SystemPropertiesConfigSource systemPropertiesConfigSource,
+                           final OSPropertiesConfigSource oSPropertiesConfigSource) {
+    super(simpleDBConfigSource, propertiesConfigSource, systemPropertiesConfigSource,oSPropertiesConfigSource);
   }
 }

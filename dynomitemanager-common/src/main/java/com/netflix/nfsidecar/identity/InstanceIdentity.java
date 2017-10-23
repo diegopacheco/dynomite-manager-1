@@ -130,8 +130,8 @@ public class InstanceIdentity {
             myInstance = new GetDeadToken().call();
 
         // Grab a pre-generated token if there is such one
-        if (null == myInstance)
-            myInstance = new GetPregeneratedToken().call();
+        //if (null == myInstance)
+            //myInstance = new GetPregeneratedToken().call();
 
         // Grab a new token
         if (null == myInstance) {
@@ -195,17 +195,22 @@ public class InstanceIdentity {
                 if (!dead.getRack().equals(envVariables.getRack()) || asgInstances.contains(dead.getInstanceId()))
                     continue;
                 logger.info("Found dead instances: " + dead.getInstanceId());
+                factory.delete(dead);
+                
                 // AppsInstance markAsDead = factory.create(dead.getApp() +
                 // "-dead", dead.getId(), dead.getInstanceId(),
                 // dead.getHostName(), dead.getHostIP(), dead.getZone(),
                 // dead.getVolumes(), dead.getToken(), dead.getRack());
                 // remove it as we marked it down...
                 // factory.delete(dead);
+                
                 isReplace = true;
                 replacedIp = dead.getHostIP();
                 String payLoad = dead.getToken();
+                String uniqueID = InstanceIdentityUniqueGenerator.createUniqueID(retriever.getInstanceId());
+                
                 logger.info("Trying to grab slot {} with availability zone {}", dead.getId(), dead.getZone());
-                return factory.create(envVariables.getDynomiteClusterName(), dead.getId(), retriever.getInstanceId(),
+                return factory.create(envVariables.getDynomiteClusterName(), uniqueID, retriever.getInstanceId(),
                         retriever.getPublicHostname(), retriever.getPublicIP(), retriever.getRac(), dead.getVolumes(),
                         payLoad, envVariables.getRack());
             }
@@ -287,7 +292,9 @@ public class InstanceIdentity {
             // membership.getRacCount(), membership.getRacMembershipSize(),
             // config.getDataCenter());
             String payload = tokenManager.createToken(my_slot, rackMembershipSize, envVariables.getRack());
-            return factory.create(envVariables.getDynomiteClusterName(), my_slot + hash, retriever.getInstanceId(),
+            String uniqueID = InstanceIdentityUniqueGenerator.createUniqueID(myInstanceId);
+            
+            return factory.create(envVariables.getDynomiteClusterName(), uniqueID, retriever.getInstanceId(),
                     retriever.getPublicHostname(), retriever.getPublicIP(), retriever.getRac(), null, payload,
                     envVariables.getRack());
         }
