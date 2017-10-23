@@ -17,6 +17,11 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
 import com.netflix.archaius.ConfigProxyFactory;
+import com.netflix.archaius.DefaultDecoder;
+import com.netflix.archaius.api.Config;
+import com.netflix.archaius.api.Decoder;
+import com.netflix.archaius.api.PropertyFactory;
+import com.netflix.archaius.config.DefaultCompositeConfig;
 import com.netflix.dynomitemanager.FloridaServer;
 import com.netflix.dynomitemanager.aws.S3Backup;
 import com.netflix.dynomitemanager.aws.S3Restore;
@@ -36,6 +41,7 @@ import javax.inject.Singleton;
 import org.quartz.SchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;
 
+import com.netflix.nfsidecar.archaius.DefaultPropertyFactory;
 import com.netflix.nfsidecar.aws.AWSMembership;
 import com.netflix.nfsidecar.aws.AwsInstanceEnvIdentity;
 import com.netflix.nfsidecar.aws.IAMCredential;
@@ -109,7 +115,12 @@ public final class FloridaModule extends AbstractModule {
         bind(HostSupplier.class).to(LocalHostSupplier.class);
         // bind(HostSupplier.class).to(CassandraLocalHostsSupplier.class);
         // bind(HostSupplier.class).to(EurekaHostsSupplier.class);
-
+        
+        /* Archaius */
+        bind(Config.class).to(DefaultCompositeConfig.class);
+        bind(Decoder.class).to(DefaultDecoder.class);
+        bind(PropertyFactory.class).to(DefaultPropertyFactory.class);
+        
     }
 
     @Provides
