@@ -138,9 +138,8 @@ public final class FloridaModule extends AbstractModule {
 		
 		for (String key : env.keySet()) {
 			String newKey = key.replaceAll("_", ".");
-			data.put("app." + newKey, env.get(key));
+			data.put(newKey, env.get(key));
 		}
-		
 		
         Properties properties = new Properties();
         URL url = this.getClass().getClassLoader().getResource("florida.properties");
