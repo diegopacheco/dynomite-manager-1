@@ -21,7 +21,11 @@ import com.netflix.archaius.api.annotations.PropertyName;
 
 @Configuration(prefix = "florida")
 public interface FloridaConfig {
-
+	
+	@DefaultValue("0.59")
+	@PropertyName(name = "dynomite.version")
+	public Double getDynomiteVersion();
+	
     /**
      * Get the full path to Dynomite's installation directory.
      *

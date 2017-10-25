@@ -115,9 +115,14 @@ public class DynomiteStandardTuner implements ProcessTuner {
         entries.put("datacenter", envVariables.getRegion());
         entries.put("read_consistency", floridaConfig.getDynomiteReadConsistency());
         entries.put("write_consistency", floridaConfig.getDynomiteWriteConsistency());
-        entries.put("mbuf_size", floridaConfig.getDynomiteMBufSize());
-        entries.put("max_msgs", setMaxMsgs());
         entries.put("pem_key_file", floridaConfig.getDynomiteInstallDir() + "/conf/dynomite.pem");
+        
+        if (floridaConfig.getDynomiteVersion() >= 0.59){
+        	logger.info("Generating specific yml configs for dynomite >= 0.5.9 ");
+        	
+        	entries.put("mbuf_size", floridaConfig.getDynomiteMBufSize());
+            entries.put("max_msgs", setMaxMsgs());
+        }
 
         if (!floridaConfig.getDynomiteHashtag().isEmpty()) {
             if (floridaConfig.getDynomiteHashtag().length() != 2) {
