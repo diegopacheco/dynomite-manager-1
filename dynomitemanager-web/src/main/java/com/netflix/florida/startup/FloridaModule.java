@@ -95,7 +95,7 @@ public final class FloridaModule extends AbstractModule {
             }
         });
         install(new JerseyModule());
-        install(new ArchaiusModule());
+        //install(new ArchaiusModule());
 /*
         install(new SwaggerServletModule());
         install(new JaxrsSwaggerModule());
