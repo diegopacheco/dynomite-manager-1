@@ -1,7 +1,7 @@
 apply plugin: 'war'
 apply plugin: "org.akhikhl.gretty"
 apply plugin: 'jacoco'
-
+apply plugin: 'project-report'
 
 // Gretty allows us to run tomcat from the command line using the "tomcatRun" task.
 if (!gradle.startParameter.taskRequests.isEmpty()) {
@@ -55,8 +55,24 @@ dependencies {
         compileOnly "org.eclipse.jetty:jetty-webapp:latest.release"
         compileOnly "javax.servlet:javax.servlet-api:latest.release"
     }
-
-
+    
+    //
+    // Jetty 9 Deps
+    //
+	compile group: 'asm', name: 'asm', version: '3.1'
+	
 }
+
+
+//
+// Jetty 9 Deps
+//
+configurations {
+    all*.exclude group: 'com.sun.jersey', module: 'jersey-core'
+    all*.exclude group: 'com.sun.jersey', module: 'jersey-client'
+    all*.exclude group: 'com.sun.jersey', module: 'jersey-server'
+    all*.exclude group: 'com.sun.jersey', module: 'jersey-servlet'
+}
+ 
 
 war.archiveName = "dynomite-manager.war"
