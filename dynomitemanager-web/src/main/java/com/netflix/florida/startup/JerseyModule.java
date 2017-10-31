@@ -53,7 +53,7 @@ public final class JerseyModule extends JerseyServletModule {
         jerseyParams.put(PackagesResourceConfig.PROPERTY_PACKAGES,
                 "com.netflix.dynomitemanager.resources;io.swagger.jaxrs.json;io.swagger.jaxrs.listing");
         jerseyParams.put(ResourceConfig.FEATURE_DISABLE_WADL, "false");
-        serve("/api/*").with(GuiceContainer.class, jerseyParams);
+        serve("/REST/*").with(GuiceContainer.class, jerseyParams);
     }
 
     @Provides
