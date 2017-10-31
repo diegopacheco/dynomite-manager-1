@@ -122,8 +122,7 @@ public final class FloridaModule extends AbstractModule {
         bind(Restore.class).to(S3Restore.class);
         
         /* Local */
-        bind(InstanceDataRetriever.class).to(LocalInstanceDataRetriever.class);
-
+        //bind(InstanceDataRetriever.class).to(LocalInstanceDataRetriever.class);
 
         /* Netflix */
         bind(IAppsInstanceFactory.class).to(CassandraInstanceFactory.class);
